@@ -57,9 +57,12 @@ class AuthController extends Controller
                 return response()->json(['success' => false, 'message' => 'Your account is pending approval.'], 403);
             }
 
+            $token = $user->createToken('auth_token')->plainTextToken;
+
             return response()->json([
                 'success' => true,
-                'user' => $user
+                'user' => $user,
+                'token' => $token
             ]);
         }
         return response()->json(['success' => false, 'message' => 'Invalid credentials'], 401);
