@@ -52,4 +52,5 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 EXPOSE 80
 
 # Start Apache
-CMD ["apache2-foreground"]
+# Start Apache with migration
+CMD bash -c "touch /var/www/html/database/database.sqlite && php artisan migrate --force --seed && apache2-foreground"
