@@ -41,7 +41,8 @@ COPY . /var/www/html
 RUN composer install --no-dev --optimize-autoloader
 
 # Set permissions
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+RUN touch /var/www/html/database/database.sqlite
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database
 
 # Expose port (Render sets PORT env var, but Apache defaults to 80. We need to sed it to listen on $PORT or just map it)
 # Render expects the app to listen on port 10000 by default, or sets a PORT env var.
