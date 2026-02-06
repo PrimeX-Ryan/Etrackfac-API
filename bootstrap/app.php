@@ -15,10 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->trustProxies(at: '*');
         $middleware->statefulApi();
         $middleware->validateCsrfTokens(except: [
-            '/api/login',
-            '/api/logout',
-            'api/login',
-            'api/logout',
+            '/api/*', // Disable CSRF for all API routes (using Bearer token)
         ]);
         $middleware->alias([
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,

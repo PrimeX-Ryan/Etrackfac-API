@@ -10,8 +10,13 @@ class ReviewController extends Controller
 {
     public function index()
     {
-        // For Program Chair to see all submissions
-        return Submission::with(['faculty', 'requirement'])->get();
+        // For Program Chair to see all submissions in their department
+        $user = auth()->user();
+        return Submission::with(['faculty', 'requirement'])
+            ->whereHas('faculty', function($q) use ($user) {
+                $q->where('department_id', $user->department_id);
+            })
+            ->get();
     }
 
     public function review(Request $request, Submission $submission)

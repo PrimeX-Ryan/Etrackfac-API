@@ -19,12 +19,17 @@ class SubmissionController extends Controller
 
         $path = $request->file('document')->store('submissions', 'public');
 
-        $submission = Submission::create([
-            'faculty_id' => Auth::id(),
-            'requirement_id' => $request->requirement_id,
-            'file_path' => $path,
-            'status' => 'pending'
-        ]);
+        $submission = Submission::updateOrCreate(
+            [
+                'faculty_id' => Auth::id(),
+                'requirement_id' => $request->requirement_id,
+            ],
+            [
+                'file_path' => $path,
+                'status' => 'pending',
+                'remarks' => null // Clear remarks on re-upload
+            ]
+        );
 
         Notification::create([
             'user_id' => Auth::id(),
