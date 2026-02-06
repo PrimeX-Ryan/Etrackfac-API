@@ -5,6 +5,7 @@ use App\Http\Controllers\SubmissionController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\RequirementController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -42,5 +43,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/admin/users', [AdminUserController::class, 'index']);
         Route::post('/admin/users/{user}/approve', [AdminUserController::class, 'approve']);
         Route::delete('/admin/users/{user}', [AdminUserController::class, 'destroy']);
+        
+        // Requirements management
+        Route::get('/admin/requirements', [RequirementController::class, 'index']);
+        Route::post('/admin/requirements', [RequirementController::class, 'store']);
+        Route::put('/admin/requirements/{requirement}', [RequirementController::class, 'update']);
+        Route::delete('/admin/requirements/{requirement}', [RequirementController::class, 'destroy']);
     });
 });
