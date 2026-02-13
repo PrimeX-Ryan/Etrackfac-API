@@ -59,11 +59,15 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/admin/users/{user}/approve', [AdminUserController::class, 'approve']);
         Route::post('/admin/users/{user}/approve', [AdminUserController::class, 'approve']);
         Route::delete('/admin/users/{user}', [AdminUserController::class, 'destroy']);
+        Route::get('/admin/users/{user}/submissions', [AdminUserController::class, 'submissions']);
         
         // Requirements management
         Route::get('/admin/requirements', [RequirementController::class, 'index']);
         Route::post('/admin/requirements', [RequirementController::class, 'store']);
         Route::put('/admin/requirements/{requirement}', [RequirementController::class, 'update']);
         Route::delete('/admin/requirements/{requirement}', [RequirementController::class, 'destroy']);
+
+        // Semester management
+        Route::apiResource('semesters', SemesterController::class);
     });
 });

@@ -42,8 +42,17 @@ class SubmissionController extends Controller
 
     public function checklist()
     {
-        $requirements = Requirement::all();
-        $submissions = Submission::where('faculty_id', Auth::id())->get()->keyBy('requirement_id');
+        $activeSemester = \App\Models\Semester::where('is_active', true)->first();
+
+        if (!$activeSemester) {
+            return response()->json([]);
+        }
+
+        $requirements = Requirement::where('semester_id', $activeSemester->id)->get();
+        $submissions = Submission::where('faculty_id', Auth::id())
+            ->whereIn('requirement_id', $requirements->pluck('id'))
+            ->get()
+            ->keyBy('requirement_id');
 
         $checklist = $requirements->map(function ($r) use ($submissions) {
             return [

@@ -84,4 +84,34 @@ class AdminUserController extends Controller
         $user->delete();
         return response()->json(['success' => true, 'message' => 'User rejected/deleted successfully']);
     }
+
+    public function submissions(User $user)
+    {
+        // Get active semester
+        $activeSemester = \App\Models\Semester::where('is_active', true)->first();
+        
+        if (!$activeSemester) {
+            return response()->json([]);
+        }
+
+        $requirements = \App\Models\Requirement::where('semester_id', $activeSemester->id)->get();
+        $submissions = \App\Models\Submission::where('faculty_id', $user->id)
+            ->whereIn('requirement_id', $requirements->pluck('id'))
+            ->get()
+            ->keyBy('requirement_id');
+
+        $checklist = $requirements->map(function ($r) use ($submissions) {
+            return [
+                'requirement_id' => $r->id,
+                'requirement' => $r->name,
+                'status' => $submissions[$r->id]->status ?? 'pending',
+                'remarks' => $submissions[$r->id]->remarks ?? null,
+                'file_path' => $submissions[$r->id]->file_path ?? null,
+                'deadline' => $r->deadline,
+                'submission_id' => $submissions[$r->id]->id ?? null,
+            ];
+        });
+
+        return response()->json($checklist);
+    }
 }

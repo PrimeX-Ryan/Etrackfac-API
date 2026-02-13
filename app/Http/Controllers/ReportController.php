@@ -8,17 +8,23 @@ use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
-    public function reports()
+    public function reports(Request $request)
     {
-        return Submission::select(
+        $query = Submission::select(
             'users.department_id',
             DB::raw('count(*) as total'),
             DB::raw("sum(case when status='pending' then 1 else 0 end) as pending"),
             DB::raw("sum(case when status='approved' then 1 else 0 end) as approved"),
             DB::raw("sum(case when status='rejected' then 1 else 0 end) as rejected")
         )
-            ->join('users', 'users.id', '=', 'submissions.faculty_id')
-            ->groupBy('users.department_id')
+            ->join('users', 'users.id', '=', 'submissions.faculty_id');
+
+        // Allow filtering by department (for Deans who want to see specific dept stats)
+        if ($request->has('department_id') && $request->department_id) {
+            $query->where('users.department_id', $request->department_id);
+        }
+
+        return $query->groupBy('users.department_id')
             ->get();
     }
 

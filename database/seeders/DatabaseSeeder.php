@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use App\Models\Department;
 use App\Models\Requirement;
+use App\Models\Semester;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
@@ -37,23 +38,30 @@ class DatabaseSeeder extends Seeder
             Role::firstOrCreate(['name' => $role]);
         }
 
-        // 3. Create Requirements
+        // 3. Create Semester
+        $semester = \App\Models\Semester::firstOrCreate(
+            ['name' => '1st Semester 2023-2024'],
+            ['is_active' => true]
+        );
+
+        // 4. Create Requirements
         $requirements = [
-            ['name' => 'Course Syllabus', 'description' => 'Approved syllabus for the current semester', 'semester' => '1st Semester 2023-2024'],
-            ['name' => 'Class Record', 'description' => 'Official class record with attendance', 'semester' => '1st Semester 2023-2024'],
-            ['name' => 'Table of Specifications (Midterm)', 'description' => 'TOS for Midterm Examinations', 'semester' => '1st Semester 2023-2024'],
-            ['name' => 'Midterm Exam Questions', 'description' => 'Copy of Midterm Exam', 'semester' => '1st Semester 2023-2024'],
-            ['name' => 'Table of Specifications (Finals)', 'description' => 'TOS for Final Examinations', 'semester' => '1st Semester 2023-2024'],
-            ['name' => 'Final Exam Questions', 'description' => 'Copy of Final Exam', 'semester' => '1st Semester 2023-2024'],
-            ['name' => 'Grade Sheet', 'description' => 'Final Grade Sheet submitted to registrar', 'semester' => '1st Semester 2023-2024'],
+            ['name' => 'Course Syllabus', 'description' => 'Approved syllabus for the current semester'],
+            ['name' => 'Class Record', 'description' => 'Official class record with attendance'],
+            ['name' => 'Table of Specifications (Midterm)', 'description' => 'TOS for Midterm Examinations'],
+            ['name' => 'Midterm Exam Questions', 'description' => 'Copy of Midterm Exam'],
+            ['name' => 'Table of Specifications (Finals)', 'description' => 'TOS for Final Examinations'],
+            ['name' => 'Final Exam Questions', 'description' => 'Copy of Final Exam'],
+            ['name' => 'Grade Sheet', 'description' => 'Final Grade Sheet submitted to registrar'],
         ];
 
         foreach ($requirements as $req) {
             Requirement::firstOrCreate([
-                'name' => $req['name']
+                'name' => $req['name'],
+                'semester_id' => $semester->id
             ], [
                 'description' => $req['description'],
-                'semester' => $req['semester'],
+                'semester_id' => $semester->id,
                 'is_required' => true
             ]);
         }
