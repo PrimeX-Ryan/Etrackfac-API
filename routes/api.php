@@ -54,6 +54,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // Admin routes
     Route::middleware('role:admin')->group(function () {
         Route::get('/admin/users', [AdminUserController::class, 'index']);
+        Route::post('/admin/users', [AdminUserController::class, 'store']);
+        Route::put('/admin/users/{user}', [AdminUserController::class, 'update']);
+        Route::post('/admin/users/{user}/approve', [AdminUserController::class, 'approve']);
         Route::post('/admin/users/{user}/approve', [AdminUserController::class, 'approve']);
         Route::delete('/admin/users/{user}', [AdminUserController::class, 'destroy']);
         

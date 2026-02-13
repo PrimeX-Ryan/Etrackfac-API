@@ -73,6 +73,7 @@ class DatabaseSeeder extends Seeder
         $admin->assignRole('admin');
 
         // Dean
+        /*
         $dean = User::firstOrCreate(
             ['email' => 'dean@etrack.com'],
             [
@@ -153,8 +154,9 @@ class DatabaseSeeder extends Seeder
             ]
         );
         $legacyChair->assignRole('program_chair');
+        */
 
         // 5. Run Sample Data Seeder for test submissions
-        $this->call(SampleDataSeeder::class);
+        // $this->call(SampleDataSeeder::class);
     }
 }
