@@ -6,6 +6,8 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\RequirementController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +22,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user()->load(['roles', 'department']);
     });
+    
+    // Profile
+    Route::put('/user/profile', [ProfileController::class, 'update']);
+
+    // Notifications
+    Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::put('/notifications/{notification}/read', [NotificationController::class, 'markAsRead']);
+
+    // Download
+    Route::get('/submissions/{submission}/download', [SubmissionController::class, 'download']);
 
     // Faculty routes
     Route::middleware('role:faculty')->group(function () {
@@ -31,6 +43,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware('role:program_chair')->group(function () {
         Route::get('/reviews', [ReviewController::class, 'index']);
         Route::post('/reviews/{submission}', [ReviewController::class, 'review']);
+        Route::get('/compliance', [ReportController::class, 'compliance']);
     });
 
     // Dean routes

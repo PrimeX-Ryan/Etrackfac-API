@@ -8,15 +8,24 @@ use Illuminate\Http\Request;
 
 class ReviewController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         // For Program Chair to see all submissions in their department
         $user = auth()->user();
-        return Submission::with(['faculty', 'requirement'])
+        $query = Submission::with(['faculty', 'requirement'])
             ->whereHas('faculty', function($q) use ($user) {
                 $q->where('department_id', $user->department_id);
-            })
-            ->get();
+            });
+
+        if ($request->has('status') && $request->status !== 'all') {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->has('requirement_id')) {
+            $query->where('requirement_id', $request->requirement_id);
+        }
+
+        return $query->get();
     }
 
     public function review(Request $request, Submission $submission)

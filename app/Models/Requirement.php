@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Requirement extends Model
 {
-    protected $fillable = ['name', 'description', 'semester', 'is_required'];
+    protected $fillable = ['name', 'description', 'semester', 'is_required', 'deadline'];
 
     public function submissions()
     {

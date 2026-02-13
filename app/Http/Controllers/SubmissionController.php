@@ -6,6 +6,7 @@ use App\Models\Requirement;
 use App\Models\Submission;
 use App\Models\Notification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 
 class SubmissionController extends Controller
@@ -51,9 +52,20 @@ class SubmissionController extends Controller
                 'status' => $submissions[$r->id]->status ?? 'pending',
                 'remarks' => $submissions[$r->id]->remarks ?? null,
                 'file_path' => $submissions[$r->id]->file_path ?? null,
+                'deadline' => $r->deadline,
+                'submission_id' => $submissions[$r->id]->id ?? null,
             ];
         });
 
         return response()->json($checklist);
+    }
+
+    public function download(Submission $submission)
+    {
+        if (!Storage::disk('public')->exists($submission->file_path)) {
+            return response()->json(['error' => 'File not found'], 404);
+        }
+
+        return Storage::disk('public')->download($submission->file_path);
     }
 }
